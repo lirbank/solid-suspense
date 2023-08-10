@@ -1,19 +1,41 @@
-import { Title } from "solid-start";
-import Counter from "~/components/Counter";
+import { For } from "solid-js";
+import { createEffect } from "solid-js";
+import { createStore, SetStoreFunction, Store } from "solid-js/store";
+
+function createLocalStore<T extends object>(
+  name: string,
+  init: T,
+): [Store<T>, SetStoreFunction<T>] {
+  console.log("createLocalStore");
+
+  const localState = localStorage.getItem(name);
+  const [state, setState] = createStore<T>(
+    localState ? (JSON.parse(localState) as T) : init,
+  );
+
+  // This does not re-rum when data changes if the app is wrapped in a <Suspense /> in src/root.tsx
+  createEffect(() => {
+    console.log("createEffect");
+
+    localStorage.setItem(name, JSON.stringify(state));
+  });
+  return [state, setState];
+}
+
+const [todos, setTodos] = createLocalStore<{title: string}[]>("todos", []);
 
 export default function Home() {
+
+  const addTodo = () => {
+    setTodos(todos.length, {
+      title: Math.random().toString(),
+    });
+  };
+
   return (
-    <main>
-      <Title>Hello World</Title>
-      <h1>Hello world!</h1>
-      <Counter />
-      <p>
-        Visit{" "}
-        <a href="https://start.solidjs.com" target="_blank">
-          start.solidjs.com
-        </a>{" "}
-        to learn how to build SolidStart apps.
-      </p>
-    </main>
+    <>
+      <button onClick={addTodo}>add</button>
+      <For each={todos}>{(todo) => <div>{todo.title}</div>}</For>
+    </>
   );
-}
+};
