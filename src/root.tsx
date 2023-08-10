@@ -23,7 +23,8 @@ export default function Root() {
         <Meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <Body>
-        <Suspense>
+        {/* Disable Suspense for createEffect to re-run when data changes in src/routes/index.tsx */}
+        {/* <Suspense> */}
           <ErrorBoundary>
             <A href="/">Index</A>
             <A href="/about">About</A>
@@ -31,7 +32,7 @@ export default function Root() {
               <FileRoutes />
             </Routes>
           </ErrorBoundary>
-        </Suspense>
+        {/* </Suspense> */}
         <Scripts />
       </Body>
     </Html>
