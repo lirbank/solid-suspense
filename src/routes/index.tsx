@@ -13,7 +13,7 @@ function createLocalStore<T extends object>(
     localState ? (JSON.parse(localState) as T) : init,
   );
 
-  // This does not re-rum when data changes if the app is wrapped in a <Suspense /> in src/root.tsx
+  // This does not re-run when data changes if the app is wrapped in a <Suspense /> in src/root.tsx
   createEffect(() => {
     console.log("createEffect");
 
